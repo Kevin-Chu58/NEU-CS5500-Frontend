@@ -1,6 +1,4 @@
 # Getting Started with Create React App
-
-## Portal
 [setup](#setup-locally)
 
 ## Setup Locally
