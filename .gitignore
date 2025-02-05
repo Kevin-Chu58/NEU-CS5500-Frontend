@@ -11,6 +11,12 @@
 # production
 /build
 
+# generated .css files (from .scss source files)
+src/**/*.css
+
+# generated .css maps
+src/**/*.css.map
+
 # misc
 .DS_Store
 .env.local
