@@ -1,6 +1,16 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Portal
+[setup](#setup-locally)
+
+## Setup Locally
+1. Pull the repo to your local folder
+2. Open the folder in VS Code
+3. Execute `npm -i` in terminal to install all npm packages
+4. Go to **Extensions**, search for **Live Sass Compiler** and install it.
+5. Once installed, you will see `Watch Sass` down the right corner, click it to enable the watching.
+   - This step enables css auto-generation from sass file
+   - sass file is easier to write and manage all the styling attributes than css file, that's why we need the compiler
 
 ## Available Scripts
 
