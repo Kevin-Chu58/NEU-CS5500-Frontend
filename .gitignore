@@ -12,7 +12,7 @@
 /build
 
 # generated .css files (from .scss source files)
-# src/**/*.css
+src/**/*.css
 
 # generated .css maps
 src/**/*.css.map
