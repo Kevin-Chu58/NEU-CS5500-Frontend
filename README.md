@@ -2,7 +2,7 @@
 [setup](#setup-locally)
 
 ## Setup Locally
-1. Pull the repo to your local folder
+1. Clone the repo to your local folder || Pull from remote branch
 2. Open the folder in VS Code
 3. Execute `npm -i` in terminal to install all npm packages
 4. Go to **Extensions**, search for **Live Sass Compiler** and install it.
