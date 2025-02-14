@@ -4,7 +4,7 @@
 ## Setup Locally
 1. Clone the repo to your local folder || Pull from remote branch
 2. Open the folder in VS Code
-3. Execute `npm -i` in terminal to install all npm packages
+3. Execute `npm i` in terminal to install all npm packages
 4. Go to **Extensions**, search for **Live Sass Compiler** and install it.
 5. Once installed, you will see `Watch Sass` down the right corner, click it to enable the watching.
    - This step enables css auto-generation from sass file
