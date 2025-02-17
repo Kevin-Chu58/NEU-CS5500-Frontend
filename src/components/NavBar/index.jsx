@@ -88,7 +88,7 @@ const NavBar = () => {
                             textDecoration: "none",
                         }}
                     >
-                        TRAVEL-PLAN
+                        TRAVEL-PLANNER
                     </Typography>
 
                     {/* mobile view - page nav */}
@@ -157,7 +157,7 @@ const NavBar = () => {
                             textDecoration: "none",
                         }}
                     >
-                        TRAVEL-PLAN
+                        TRAVEL-PLANNER
                     </Typography>
 
                     {/* web view - page nav */}
@@ -189,10 +189,10 @@ const NavBar = () => {
                         </Box>
                     )}
 
-                    {/* all view - avatar */}
                     {isAuthenticated && (
                         <>
-                            <Box>
+                            {/* mobile view - page nav */}
+                            <Box sx={{display:{xs:"none", md:"block"}}}>
                                 <Typography
                                     sx={{
                                         mr: 2,
@@ -205,6 +205,7 @@ const NavBar = () => {
                                     {username}
                                 </Typography>
                             </Box>
+                            {/* all view - avatar */}
                             <Box sx={{ flexGrow: 0, display: "block" }}>
                                 <Tooltip title="Open settings">
                                     <IconButton
