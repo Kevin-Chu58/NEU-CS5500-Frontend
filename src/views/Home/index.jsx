@@ -2,95 +2,61 @@ import {
     Container,
     Typography,
     Grid2 as Grid,
-    Skeleton,
     Stack,
     Button,
-    Rating,
-    Chip,
+    Input,
 } from "@mui/material";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useEffect, useState } from "react";
 
 const Home = () => {
+    const [where, setWhere] = useState("");
+
+    useEffect(() => {}, [where]);
+
+    const handleInputChange = (e) => {
+        setWhere(e.target.value);
+    }
+
+    const isInputEmpty = () => {
+        return where.length === 0;
+    }
+
+    const handleSearch = () => {
+        console.log(where);
+        setWhere("");
+    }
+
     return (
-        <Container maxWidth="xl" sx={{mt: 4}}>
-            {/* <Stack direction="row" spacing={2} sx={{m: 1, width: "100%"}}>
-                <Button
-                    variant="outlined"
-                    size="small"
-                    color="neutral"
-                    startIcon={<DownloadIcon fontSize="inherit" />}
-                >
-                    Download
-                </Button>
-                <Button
-                    variant="outlined"
-                    size="small"
-                    color="neutral"
-                    startIcon={<PrintIcon fontSize="inherit" />}
-                >
-                    Print
-                </Button>
-            </Stack> */}
-            
+        <Container maxWidth="xl" sx={{ mt: 4, justifyItems: "center", fontFamily: "cursive" }}>
+            <Typography
+                color="primary"
+                variant="h4"
+                sx={{ my: 1, fontFamily: "inherit", fontWeight: "bold" }}
+            >
+                TAKE ME TO
+            </Typography>
             <Stack direction="row">
-                <Container maxWidth="md">
-                    <Grid
-                        container
-                        spacing={1}
-                        sx={{
-                            m: 1,
-                        }}
-                    >
-                        <Grid spacing={0}>
-                            <Grid size={12} margin={0}>
-                                <Typography variant="h4">Title</Typography>
-                                
-                <Typography sx={{ ml: "auto" }}>Last edited: Jan 20, 2023</Typography>
-                                
-                            </Grid>
-                            <Grid size={12}>
-                                <Rating name="half-rating"  defaultValue={2.5} precision={0.5} />
-                            </Grid>
-                            <Grid size={12}>
-                                <Chip label="seattle" size="small" color="primary" />
-                            </Grid>
-                        </Grid>
-                        
-                         {/* content */}
-                        <Grid size={12}>
-                            <Skeleton variant="rounded" height={20}></Skeleton>
-                        </Grid>
-                        <Grid size={12}>
-                            <Skeleton variant="rounded" height={100}></Skeleton>
-                        </Grid>
-                        <Grid size={12}>
-                            <Skeleton variant="rounded" height={20}></Skeleton>
-                        </Grid>
-                    </Grid>
-                </Container>
-
-                <Container maxWidth="xs">
-                    <Grid
-                        container
-                        spacing={1}
-                        sx={{
-                            m: 1,
-                        }}
-                    >
-                        <Grid size={12} spacing={0}>
-                            <Grid size={12}>
-                                Author profile widget (TODO BELOW):
-                                <Skeleton variant="rounded" height={60}/>
-                            </Grid>
-                        </Grid>
-
-                        {/* content */}
-                        <Grid size={12}>
-                            Nav list (TODO BELOW):
-                            <Skeleton variant="rounded" height={100} />
-                        </Grid>
-                    </Grid>
-                </Container>
+                    {/* <InputLabel htmlFor="where-label">Where?</InputLabel> */}
+                <Input
+                    id="where"
+                    size="small"
+                    sx={{ width: 400,  borderRadius: 2, pt: 1, pl: 1, m: 0, fontSize: 18, fontFamily: "inherit", backgroundColor: "#dddddd" }}
+                    disableUnderline
+                    placeholder="Where?"
+                    onChange={handleInputChange}
+                    value={where}
+                />
+                <Button
+                    disabled={isInputEmpty()}
+                    variant="contained"
+                    size="small"
+                    sx={{ minWidth: 40, height: 40, my: "auto", ml: 2, fontFamily: "inherit" }}
+                    onClick={handleSearch}
+                >
+                    <Typography variant="h6" sx={{fontFamily: "inherit"}}>
+                        Go!
+                    </Typography>
+                </Button>
             </Stack>
         </Container>
     );
