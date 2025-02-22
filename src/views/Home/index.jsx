@@ -38,7 +38,12 @@ const Home = () => {
             <Typography
                 color="primary"
                 variant="h4"
-                sx={{ my: 1, fontFamily: "inherit", fontWeight: "bold" }}
+                sx={{
+                    my: 1,
+                    fontFamily: "inherit",
+                    fontWeight: "bold",
+                    cursor: "default",
+                }}
             >
                 TAKE ME TO
             </Typography>
@@ -60,6 +65,7 @@ const Home = () => {
                     placeholder="Where?"
                     onChange={handleInputChange}
                     value={where}
+                    autoFocus={true}
                 />
                 <Button
                     disabled={isInputEmpty()}
@@ -81,16 +87,24 @@ const Home = () => {
             </Stack>
 
             {/* filter */}
-            <Accordion>
-                <AccordionSummary>
-                    <span>summary</span>
-                </AccordionSummary>
+            <Accordion
+                identifier="filter1"
+                variant="reverse"
+                sx={{ transition: "all .3s ease-in" }}
+            >
                 <AccordionDetails>
-                    <Skeleton width={100} />
+                    <Typography backgroundColor="aqua">
+                        <span className="ref">close</span>
+                    </Typography>
                 </AccordionDetails>
+                <AccordionSummary>
+                    <Typography>
+                        <span className="ref">summary</span>
+                    </Typography>
+                </AccordionSummary>
             </Accordion>
 
-            <Typography>a</Typography>
+            <Skeleton width={800} height={200} />
         </Container>
     );
 };
