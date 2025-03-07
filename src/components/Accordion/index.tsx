@@ -1,11 +1,26 @@
 import { Container } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { CSSProperties, Dispatch, JSX, SetStateAction, useEffect, useState } from "react";
 
-const Accordion = ({ identifier, variant, sx, children }) => {
+type AccordionProps = {
+    identifier: string,
+    variant?: "default" | "reverse" | undefined,
+    isExpanded: boolean,
+    setIsExpanded: Dispatch<SetStateAction<boolean>>,
+    sx: CSSProperties,
+    children: JSX.Element | JSX.Element[],
+};
+
+const Accordion = ({
+    identifier,
+    variant,
+    isExpanded,
+    setIsExpanded,
+    sx,
+    children,
+}: AccordionProps) => {
     const [height, setHeight] = useState(0);
     const [summaryHeight, setSummaryHeight] = useState(0);
     const [detailsHeight, setDetailsHeight] = useState(0);
-    const [isExpanded, setIsExpanded] = useState(false);
     const [hasAnimation, setHasAnimation] = useState(false);
     const [id] = useState(identifier);
     const [variantType, setVariantType] = useState("default");
@@ -17,12 +32,11 @@ const Accordion = ({ identifier, variant, sx, children }) => {
             case "reverse":
                 setVariantType(variant);
         }
-    }
+    };
 
     // setup expand behavior
     useEffect(() => {
         if (!hasAnimation) {
-            
             // setup variant that affects expand style
             getVariant();
 
@@ -35,9 +49,9 @@ const Accordion = ({ identifier, variant, sx, children }) => {
             )[0] as HTMLElement;
             setExpandBehavior(summary, details);
 
-            document.body.addEventListener("mouseup", (e) =>
-                handleCloseAccordionDetails(e, accordion)
-            );
+            // document.body.addEventListener("mouseup", (e) =>
+            //     handleCloseAccordionDetails(e, accordion)
+            // );
         }
     });
 
@@ -46,34 +60,39 @@ const Accordion = ({ identifier, variant, sx, children }) => {
         isExpanded
             ? setHeight(summaryHeight + detailsHeight)
             : setHeight(summaryHeight);
-    });
+    }, [isExpanded, summaryHeight, detailsHeight]);
 
-    const handleOnClickSummaryRef = () => {
-        if (!hasAnimation) setHasAnimation(true);
-        setIsExpanded((b) => !b);
-    };
+    useEffect(() => {
+        setHasAnimation(true);
+    }, [isExpanded])
 
-    const handleCloseAccordionDetails = (
-        event: MouseEvent,
-        accordion: HTMLElement
-    ) => {
-        if (!accordion?.contains(event.target as HTMLElement))
-            setIsExpanded(false);
-    };
+    // set isExpanded to false when click outside the filter component
+    // const handleCloseAccordionDetails = (
+    //     event: MouseEvent,
+    //     accordion: HTMLElement
+    // ) => {
+    //     if (!accordion?.contains(event.target as HTMLElement))
+    //         setIsExpanded(false);
+    // };
 
     const setExpandBehavior = (summary: HTMLElement, details: HTMLElement) => {
+        setSummaryHeight(summary?.clientHeight ?? 0);
+        setDetailsHeight(details?.clientHeight ?? 0);
 
-        setSummaryHeight(summary.clientHeight);
-        setDetailsHeight(details.clientHeight);
+        const summaryRef = summary?.getElementsByClassName(
+            "ref"
+        )[0] as HTMLElement;
+        if (summaryRef) {
+            summaryRef.style.cursor = "pointer";
 
-        const summaryRef = summary.getElementsByClassName("ref")[0] as HTMLElement;
-        summaryRef.style.cursor = "pointer";
+            summaryRef.onclick = () => {
+                setIsExpanded(b => !b);
+            };
+        }
 
-        summaryRef.onclick = () => {
-            handleOnClickSummaryRef();
-        };
-
-        const detailsRef = details.getElementsByClassName("ref")[0] as HTMLElement;
+        const detailsRef = details?.getElementsByClassName(
+            "ref"
+        )[0] as HTMLElement;
         if (detailsRef) {
             detailsRef.style.cursor = "pointer";
 
@@ -99,25 +118,20 @@ const Accordion = ({ identifier, variant, sx, children }) => {
         ".accordion-summary": {
             marginTop: isExpanded ? "0" : `-${summaryHeight}px`,
             transition: hasAnimation ? style.transition : "",
-        }
+        },
     };
 
     const getStyle = () => {
-        switch(variantType) {
+        switch (variantType) {
             case "default":
                 return defaultStyle;
             case "reverse":
                 return reverseStyle;
         }
-    }
+    };
 
     return (
-        <Container
-            id={id}
-            maxWidth="lg"
-            className="accordion"
-            sx={getStyle()}
-        >
+        <Container id={id} maxWidth="lg" className="accordion" sx={getStyle()}>
             {children}
         </Container>
     );

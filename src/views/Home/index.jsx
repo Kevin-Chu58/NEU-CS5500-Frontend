@@ -1,38 +1,15 @@
 import {
     Container,
     Typography,
-    Grid2 as Grid,
-    Stack,
-    Button,
-    Input,
-    Skeleton,
+    Skeleton
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import Accordion from "../../components/Accordion/index.tsx";
-import AccordionSummary from "../../components/AccordionSummary/index.tsx";
-import AccordionDetails from "../../components/AccordionDetails/index.tsx";
+import PlannerSearch from "../../components/PlannerSearch/index.tsx";
 
 const Home = () => {
-    const [where, setWhere] = useState("");
-
-    useEffect(() => {}, [where]);
-
-    const handleInputChange = (e) => {
-        setWhere(e.target.value);
-    };
-
-    const isInputEmpty = () => {
-        return where.length === 0;
-    };
-
-    const handleSearch = () => {
-        console.log(where);
-        setWhere("");
-    };
 
     return (
         <Container
-            maxWidth="xl"
+            maxWidth={false}
             sx={{ mt: 4, justifyItems: "center", fontFamily: "cursive" }}
         >
             <Typography
@@ -47,64 +24,9 @@ const Home = () => {
             >
                 TAKE ME TO
             </Typography>
-            <Stack direction="row">
-                <Input
-                    id="where"
-                    size="small"
-                    sx={{
-                        width: 400,
-                        borderRadius: 2,
-                        pt: 1,
-                        pl: 1,
-                        m: 0,
-                        fontSize: 18,
-                        fontFamily: "inherit",
-                        backgroundColor: "#dddddd",
-                    }}
-                    disableUnderline
-                    placeholder="Where?"
-                    onChange={handleInputChange}
-                    value={where}
-                    autoFocus={true}
-                />
-                <Button
-                    disabled={isInputEmpty()}
-                    variant="contained"
-                    size="small"
-                    sx={{
-                        minWidth: 40,
-                        height: 40,
-                        my: "auto",
-                        ml: 2,
-                        fontFamily: "inherit",
-                    }}
-                    onClick={handleSearch}
-                >
-                    <Typography variant="h6" sx={{ fontFamily: "inherit" }}>
-                        Go!
-                    </Typography>
-                </Button>
-            </Stack>
+            <PlannerSearch />
 
-            {/* filter */}
-            <Accordion
-                identifier="filter1"
-                variant="reverse"
-                sx={{ transition: "all .3s ease-in" }}
-            >
-                <AccordionDetails>
-                    <Typography backgroundColor="aqua">
-                        <span className="ref">close</span>
-                    </Typography>
-                </AccordionDetails>
-                <AccordionSummary>
-                    <Typography>
-                        <span className="ref">summary</span>
-                    </Typography>
-                </AccordionSummary>
-            </Accordion>
-
-            <Skeleton width={800} height={200} />
+            <Skeleton width={800} height={1000} />
         </Container>
     );
 };

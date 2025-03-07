@@ -93,7 +93,7 @@ const NavBar = () => {
     let username = isAuthenticated ? user?.name : usernameGuest;
 
     return (
-        <AppBar color="primary" position="sticky">
+        <AppBar id="app-bar" color="primary" position="sticky" sx={{top: 0}}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     {/* web view - logo */}
