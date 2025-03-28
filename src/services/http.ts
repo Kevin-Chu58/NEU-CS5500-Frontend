@@ -54,14 +54,16 @@ const post = <TResponse>(
     apiBaseURL: string,
     endpoint: string,
     body: HttpRequestBody = "",
-    headers = new Headers()
+    headers = new Headers(),
+    token: string,
 ): Promise<TResponse> =>
     makeRequest(
         apiBaseURL,
         endpoint,
         "post",
         body,
-        setContentTypeJSON(headers)
+        setContentTypeJSON(headers),
+        token,
     );
 
 // PATCH is required to be in all caps.  http services automatically capitalizes headers for post,put,get,del... but not patch.
@@ -69,31 +71,33 @@ const patch = <TResponse>(
     apiBaseURL: string,
     endpoint: string,
     body: HttpRequestBody = "",
-    headers = new Headers()
+    headers = new Headers(),
+    token,
 ): Promise<TResponse> =>
     makeRequest(
         apiBaseURL,
         endpoint,
         "PATCH",
         body,
-        setContentTypeJSON(headers)
+        setContentTypeJSON(headers),
+        token,
     );
 
 const del = <TResponse>(
     apiBaseURL: string,
     endpoint: string,
     body: HttpRequestBody = "",
-    headers = new Headers()
+    headers = new Headers(),
+    token: string,
 ): Promise<TResponse> =>
     makeRequest(
         apiBaseURL,
         endpoint,
         "delete",
         body,
-        setContentTypeJSON(headers)
+        setContentTypeJSON(headers),
+        token,
     );
-
-const apiBaseURL = process.env.REACT_API_URL as string;
 
 /**
  * Make a request to the API
