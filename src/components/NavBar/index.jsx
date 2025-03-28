@@ -35,7 +35,7 @@ const pageLinks = [
 ];
 
 const NavBar = () => {
-    const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
+    const { user, isAuthenticated, loginWithRedirect, logout, getAccessTokenSilently } = useAuth0();
     const [anchorElNav, setAnchorElNav] = useState(null); // mobile view
     const [anchorElUser, setAnchorElUser] = useState(null); // all views
     const [onPage, setOnPage] = useState(null); // all views - highlight the nav button of current page
@@ -225,7 +225,11 @@ const NavBar = () => {
                     {!isAuthenticated && (
                         <Box>
                             <Button
-                                onClick={loginWithRedirect}
+                                onClick={() => loginWithRedirect({
+                                    authorizationParams: {
+                                        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+                                    },
+                                })}
                                 sx={{ my: 2, color: "white" }}
                             >
                                 Login
