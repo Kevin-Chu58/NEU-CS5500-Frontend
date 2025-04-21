@@ -1,6 +1,7 @@
 import Home from "./views/Home";
 import Itinerary from "./views/Itinerary";
 import UserItineraries from "./views/UserItinerary/Index";
+import TripDetails from "./views/TripDetails/TripDetails";
 
 const routes = [
   {
@@ -17,6 +18,11 @@ const routes = [
     name: "UserItinerary",
     path: "/useritinerary",
     element: <UserItineraries />,
+  },
+  {
+    name: "trip-details",
+    path: "/trip-details",
+    element: <TripDetails />,
   }
 ];
 
