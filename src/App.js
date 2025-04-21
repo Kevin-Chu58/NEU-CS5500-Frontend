@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import routes from "./routes";
 import NavBar from "./components/NavBar";
-import "./App.css";
+import "./App.scss";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
 import userService from "./services/user.ts";
