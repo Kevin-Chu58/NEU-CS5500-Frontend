@@ -19,25 +19,23 @@ const UserItinerary = () => {
         { id: 1, title: "Japan Adventure" },
         { id: 2, title: "Paris Getaway" },
         { id: 3, title: "California Roadtrip" },
-    ]
+    ];
 
     useEffect(() => {
         const fetchWithTimeout = async () => {
-            const fetchTrips = async () => {
-                const response = await fetch("/trips/my");
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
+            try {
+                const response = await fetch("/trips/my", { signal: controller.signal });
+                clearTimeout(timeoutId);
+
                 if (!response.ok) {
                     throw new Error("Failed to fetch");
                 }
-                return await response.json();
-            };
-    
-            const timeout = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error("Fetch timed out")), 30000) // 30 seconds
-            );
-    
-            try {
-                const data = await Promise.race([fetchTrips(), timeout]);
-    
+
+                const data = await response.json();
+
                 if (data.length === 0) {
                     setItineraries(dummyTrips);
                 } else {
@@ -54,7 +52,7 @@ const UserItinerary = () => {
                 setLoading(false);
             }
         };
-    
+
         fetchWithTimeout();
     }, []);
 
@@ -102,12 +100,14 @@ const UserItinerary = () => {
                     itineraries.map((itinerary) => (
                         <Paper
                             key={itinerary.id}
-                            elevation={2}
+                            elevation={3}
                             sx={{
                                 p: 2,
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center",
+                                borderRadius: 2,
+                                bgcolor: "white",
                             }}
                         >
                             <Typography
@@ -118,15 +118,18 @@ const UserItinerary = () => {
                             </Typography>
                             <Stack direction="row" spacing={2}>
                                 <Button
-                                    variant="outlined"
+                                    variant="contained"
+                                    color="primary"
                                     onClick={() => navigate(`/itinerary/${itinerary.id}`)}
+                                    sx={{ borderRadius: 5 }}
                                 >
                                     View
                                 </Button>
                                 <Button
-                                    variant="outlined"
+                                    variant="contained"
                                     color="error"
                                     onClick={() => handleDelete(itinerary.id)}
+                                    sx={{ borderRadius: 5 }}
                                 >
                                     Delete
                                 </Button>
