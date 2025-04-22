@@ -8,11 +8,17 @@ import {
     Paper,
     Stack,
     CircularProgress,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
 } from "@mui/material";
 
 const UserItinerary = () => {
     const [itineraries, setItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [selectedId, setSelectedId] = useState(null);
     const navigate = useNavigate();
 
     const dummyTrips = [
@@ -56,9 +62,30 @@ const UserItinerary = () => {
         fetchWithTimeout();
     }, []);
 
-    const handleDelete = (id) => {
-        console.log("Delete itinerary", id);
-        // Add your delete logic here
+    const handleDeleteClick = (id) => {
+        setSelectedId(id);
+        setOpenDialog(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        try {
+            const response = await fetch(`/trips/${selectedId}/isHidden`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(true),
+            });
+
+            if (response.ok) {
+                setItineraries((prev) => prev.filter((trip) => trip.id !== selectedId));
+            } else {
+                console.error("Failed to mark trip as hidden");
+            }
+        } catch (error) {
+            console.error("Error during delete request", error);
+        } finally {
+            setOpenDialog(false);
+            setSelectedId(null);
+        }
     };
 
     return (
@@ -128,7 +155,7 @@ const UserItinerary = () => {
                                 <Button
                                     variant="contained"
                                     color="error"
-                                    onClick={() => handleDelete(itinerary.id)}
+                                    onClick={() => handleDeleteClick(itinerary.id)}
                                     sx={{ borderRadius: 5 }}
                                 >
                                     Delete
@@ -138,6 +165,20 @@ const UserItinerary = () => {
                     ))
                 )}
             </Box>
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    Are you sure you want to delete this itinerary?
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)} color="primary">
+                        No
+                    </Button>
+                    <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+                        Yes
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 };
