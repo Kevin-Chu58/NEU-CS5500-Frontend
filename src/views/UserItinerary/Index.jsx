@@ -13,54 +13,48 @@ import {
     DialogContent,
     DialogActions,
 } from "@mui/material";
+import tripService from "../../services/trip.ts";
+import { useAuth0 } from "@auth0/auth0-react";
+import { getGlobalData } from "../../global.js";
 
 const UserItinerary = () => {
+    const {isAuthenticated, getAccessTokenSilently} = useAuth0();
     const [itineraries, setItineraries] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [accessToken, setAccessToken] = useState();
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const navigate = useNavigate();
 
-    const dummyTrips = [
-        { id: 1, title: "Japan Adventure" },
-        { id: 2, title: "Paris Getaway" },
-        { id: 3, title: "California Roadtrip" },
-    ];
-
     useEffect(() => {
-        const fetchWithTimeout = async () => {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+        setLoading(false)
+    }, [itineraries]);
 
-            try {
-                const response = await fetch("/trips/my", { signal: controller.signal });
-                clearTimeout(timeoutId);
+    // useEffect(() => {
+    //     const updateAccessToken = async () => {
+    //         setAccessToken(await getAccessTokenSilently({
+    //             authorizationParams: {
+    //                 audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+    //             }
+    //         }));
+    //     }
+        
+    //     if (isAuthenticated)
+    //         updateAccessToken();
+    // }, [isAuthenticated, getAccessTokenSilently]);
 
-                if (!response.ok) {
-                    throw new Error("Failed to fetch");
-                }
-
-                const data = await response.json();
-
-                if (data.length === 0) {
-                    setItineraries(dummyTrips);
-                } else {
-                    const tripData = data.map((trip) => ({
-                        id: trip.Id,
-                        title: trip.Name,
-                    }));
-                    setItineraries(tripData);
-                }
-            } catch (error) {
-                console.error("Fetch failed or timed out. Using dummy data.", error);
-                setItineraries(dummyTrips);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchWithTimeout();
-    }, []);
+    
+    useEffect(() => {
+        const getMyTrips = async () => {
+            setItineraries(await tripService.getMyTrips(getGlobalData().accessToken));
+        }
+        var globalData = getGlobalData();
+        if (globalData) {
+            setAccessToken(globalData.accessToken);
+            getMyTrips();
+            // console.log(accessToken);
+        }
+    }, [getGlobalData(), loading]);
 
     const handleDeleteClick = (id) => {
         setSelectedId(id);
@@ -68,24 +62,9 @@ const UserItinerary = () => {
     };
 
     const handleDeleteConfirm = async () => {
-        try {
-            const response = await fetch(`/trips/${selectedId}/isHidden`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(true),
-            });
-
-            if (response.ok) {
-                setItineraries((prev) => prev.filter((trip) => trip.id !== selectedId));
-            } else {
-                console.error("Failed to mark trip as hidden");
-            }
-        } catch (error) {
-            console.error("Error during delete request", error);
-        } finally {
-            setOpenDialog(false);
-            setSelectedId(null);
-        }
+        tripService.setTripIsHidden(selectedId, true, accessToken);
+        setLoading(true);
+        setOpenDialog(false);
     };
 
     return (
@@ -141,7 +120,7 @@ const UserItinerary = () => {
                                 variant="h6"
                                 sx={{ fontFamily: "inherit", fontWeight: 500 }}
                             >
-                                {itinerary.title}
+                                {itinerary.name}
                             </Typography>
                             <Stack direction="row" spacing={2}>
                                 <Button
@@ -174,7 +153,7 @@ const UserItinerary = () => {
                     <Button onClick={() => setOpenDialog(false)} color="primary">
                         No
                     </Button>
-                    <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+                    <Button onClick={() => handleDeleteConfirm()} color="error" autoFocus>
                         Yes
                     </Button>
                 </DialogActions>

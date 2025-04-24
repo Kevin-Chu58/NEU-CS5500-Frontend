@@ -16,7 +16,7 @@ const routes = [
   },
   {
     name: "UserItinerary",
-    path: "/useritinerary",
+    path: "/my",
     element: <UserItineraries />,
   },
   {

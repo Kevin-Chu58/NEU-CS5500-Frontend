@@ -5,6 +5,7 @@ import "./App.scss";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
 import userService from "./services/user.ts";
+import { getGlobalData, setGlobalData } from "./global";
 
 const App = () => {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -20,8 +21,9 @@ const App = () => {
             }));
         }
         
-        if (isAuthenticated)
+        if (isAuthenticated) {
             updateAccessToken();
+        }
     }, [isAuthenticated, getAccessTokenSilently]);
 
     
@@ -32,6 +34,11 @@ const App = () => {
         if (accessToken) {
             getCurrentUser();
             // console.log(accessToken);
+            
+            setGlobalData({accessToken: accessToken});
+            const myGlobalData = getGlobalData();
+            // while (!getGlobalData("accessToken"))
+                // console.log(myGlobalData);
         }
     }, [accessToken]);
 
