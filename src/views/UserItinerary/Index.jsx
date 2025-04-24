@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import tripService from "../../services/trip.ts";
 import { useAuth0 } from "@auth0/auth0-react";
+import { getGlobalData } from "../../global.js";
 
 const UserItinerary = () => {
     const {isAuthenticated, getAccessTokenSilently} = useAuth0();
@@ -29,29 +30,31 @@ const UserItinerary = () => {
         setLoading(false)
     }, [itineraries]);
 
-    useEffect(() => {
-        const updateAccessToken = async () => {
-            setAccessToken(await getAccessTokenSilently({
-                authorizationParams: {
-                    audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-                }
-            }));
-        }
+    // useEffect(() => {
+    //     const updateAccessToken = async () => {
+    //         setAccessToken(await getAccessTokenSilently({
+    //             authorizationParams: {
+    //                 audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+    //             }
+    //         }));
+    //     }
         
-        if (isAuthenticated)
-            updateAccessToken();
-    }, [isAuthenticated, getAccessTokenSilently]);
+    //     if (isAuthenticated)
+    //         updateAccessToken();
+    // }, [isAuthenticated, getAccessTokenSilently]);
 
     
     useEffect(() => {
         const getMyTrips = async () => {
-            setItineraries(await tripService.getMyTrips(accessToken));
+            setItineraries(await tripService.getMyTrips(getGlobalData().accessToken));
         }
-        if (accessToken) {
+        var globalData = getGlobalData();
+        if (globalData) {
+            setAccessToken(globalData.accessToken);
             getMyTrips();
             // console.log(accessToken);
         }
-    }, [accessToken, loading]);
+    }, [getGlobalData(), loading]);
 
     const handleDeleteClick = (id) => {
         setSelectedId(id);
