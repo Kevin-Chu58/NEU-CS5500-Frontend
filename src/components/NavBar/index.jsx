@@ -29,7 +29,7 @@ const pageLinks = [
     },
     {
         name: "itinerary",
-        to: "/itinerary",
+        to: "/itinerary/1",
         ref: "itinerary",
     },
     {

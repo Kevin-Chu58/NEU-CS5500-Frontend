@@ -7,7 +7,7 @@ import { useEffect, useState, createContext } from "react";
 import userService from "./services/user.ts";
 import { getGlobalData, setGlobalData } from "./global";
 
-// 创建Auth上下文，用于跨组件共享accessToken
+// Create Auth context for sharing accessToken across components
 export const AuthContext = createContext({ accessToken: null });
 
 const App = () => {
@@ -23,10 +23,10 @@ const App = () => {
                         audience: process.env.REACT_APP_AUTH0_AUDIENCE,
                     }
                 });
-                console.log("获取到Auth0令牌");
+                console.log("Got Auth0 token");
                 setAccessToken(token);
             } catch (error) {
-                console.error("获取令牌失败:", error);
+                console.error("Failed to get token:", error);
             }
         }
         
@@ -42,20 +42,17 @@ const App = () => {
                 if (accessToken) {
                     const userData = await userService.getCurrentUser(accessToken);
                     setUser(userData);
-                    console.log("已获取用户数据:", userData);
+                    console.log("User data retrieved:", userData);
                 }
             } catch (error) {
-                console.error("获取用户数据失败:", error);
+                console.error("Failed to get user data:", error);
             }
         }
         if (accessToken) {
             getCurrentUser();
-            // console.log(accessToken);
             
             setGlobalData({accessToken: accessToken});
             const myGlobalData = getGlobalData();
-            // while (!getGlobalData("accessToken"))
-                // console.log(myGlobalData);
         }
     }, [accessToken]);
 

@@ -234,7 +234,7 @@ const Home = () => {
           {paginatedResults.map((trip, index) => (
             <Card
               key={index}
-              onClick={() => navigate(`/trips/${trip.id}`)}
+              onClick={() => navigate(`/trips/${trip.id || trip.Id}`)}
               sx={{
                 cursor: "pointer",
                 p: 1.5,
@@ -258,13 +258,13 @@ const Home = () => {
                     mb: 0.5,
                   }}
                 >
-                  🌍 {trip.name}
+                  🌍 {trip.name || trip.Name}
                 </Typography>
                 <Typography variant="body2">
-                  Created: {new Date(trip.createdAt).toLocaleString()}
+                  Created: {new Date(trip.createdAt || trip.CreatedAt).toLocaleString()}
                 </Typography>
                 <Typography variant="body2">
-                  Updated: {new Date(trip.lastUpdatedAt).toLocaleString()}
+                  Updated: {new Date(trip.lastUpdatedAt || trip.LastUpdatedAt).toLocaleString()}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -277,7 +277,7 @@ const Home = () => {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {trip.description}
+                  {trip.description || trip.Description}
                 </Typography>
               </CardContent>
             </Card>
