@@ -26,7 +26,7 @@ const UserItinerary = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-
+        setLoading(false)
     }, [itineraries]);
 
     useEffect(() => {
@@ -47,9 +47,8 @@ const UserItinerary = () => {
         const getMyTrips = async () => {
             setItineraries(await tripService.getMyTrips(accessToken));
         }
-        if (loading && accessToken) {
+        if (accessToken) {
             getMyTrips();
-            setLoading(false);
             // console.log(accessToken);
         }
     }, [accessToken, loading]);
