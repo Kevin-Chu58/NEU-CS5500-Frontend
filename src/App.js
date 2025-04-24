@@ -3,8 +3,11 @@ import routes from "./routes";
 import NavBar from "./components/NavBar";
 import "./App.scss";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext } from "react";
 import userService from "./services/user.ts";
+
+// 创建Auth上下文，用于跨组件共享accessToken
+export const AuthContext = createContext({ accessToken: null });
 
 const App = () => {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -13,11 +16,17 @@ const App = () => {
 
     useEffect(() => {
         const updateAccessToken = async () => {
-            setAccessToken(await getAccessTokenSilently({
-                authorizationParams: {
-                    audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-                }
-            }));
+            try {
+                const token = await getAccessTokenSilently({
+                    authorizationParams: {
+                        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+                    }
+                });
+                console.log("获取到Auth0令牌");
+                setAccessToken(token);
+            } catch (error) {
+                console.error("获取令牌失败:", error);
+            }
         }
         
         if (isAuthenticated)
@@ -27,16 +36,23 @@ const App = () => {
     
     useEffect(() => {
         const getCurrentUser = async () => {
-            setUser(await userService.getCurrentUser(accessToken));
+            try {
+                if (accessToken) {
+                    const userData = await userService.getCurrentUser(accessToken);
+                    setUser(userData);
+                    console.log("已获取用户数据:", userData);
+                }
+            } catch (error) {
+                console.error("获取用户数据失败:", error);
+            }
         }
         if (accessToken) {
             getCurrentUser();
-            // console.log(accessToken);
         }
     }, [accessToken]);
 
     return (
-        <>
+        <AuthContext.Provider value={{ accessToken }}>
             <NavBar />
             <Routes>
                 {routes.map((route) => (
@@ -47,7 +63,7 @@ const App = () => {
                     />
                 ))}
             </Routes>
-        </>
+        </AuthContext.Provider>
     );
 }
 
