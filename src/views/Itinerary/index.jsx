@@ -7,10 +7,16 @@ import {
     Rating,
     Chip,
 } from "@mui/material";
+import { useParams } from "react-router-dom";
 
-const Home = () => {
+const Itinerary = () => {
+    const { id } = useParams();
+
     return (
         <Container maxWidth="xl" sx={{mt: 4}}>
+            <Typography variant="subtitle1" color="primary" gutterBottom>
+                Viewing Itinerary ID: {id}
+            </Typography>
             
             <Stack direction="row">
                 <Container maxWidth="md">
@@ -76,4 +82,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Itinerary;

@@ -12,6 +12,7 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    Alert,
 } from "@mui/material";
 import tripService from "../../services/trip.ts";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -24,37 +25,42 @@ const UserItinerary = () => {
     const [accessToken, setAccessToken] = useState();
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         setLoading(false)
     }, [itineraries]);
-
-    // useEffect(() => {
-    //     const updateAccessToken = async () => {
-    //         setAccessToken(await getAccessTokenSilently({
-    //             authorizationParams: {
-    //                 audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-    //             }
-    //         }));
-    //     }
-        
-    //     if (isAuthenticated)
-    //         updateAccessToken();
-    // }, [isAuthenticated, getAccessTokenSilently]);
-
     
     useEffect(() => {
         const getMyTrips = async () => {
-            setItineraries(await tripService.getMyTrips(getGlobalData().accessToken));
+            try {
+                if (!isAuthenticated) {
+                    console.log("User not logged in, unable to load trips");
+                    setLoading(false);
+                    return;
+                }
+                
+                const globalData = getGlobalData();
+                if (!globalData || !globalData.accessToken) {
+                    console.log("Access token not found, waiting...");
+                    return;
+                }
+                
+                setAccessToken(globalData.accessToken);
+                const trips = await tripService.getMyTrips(globalData.accessToken);
+                setItineraries(trips);
+                setError(null);
+            } catch (err) {
+                console.error("Failed to get trips:", err);
+                setError(`Failed to get trips: ${err.message || "Unknown error"}`);
+            } finally {
+                setLoading(false);
+            }
         }
-        var globalData = getGlobalData();
-        if (globalData) {
-            setAccessToken(globalData.accessToken);
-            getMyTrips();
-            // console.log(accessToken);
-        }
-    }, [getGlobalData(), loading]);
+        
+        getMyTrips();
+    }, [isAuthenticated, getGlobalData(), loading]);
 
     const handleDeleteClick = (id) => {
         setSelectedId(id);
@@ -62,10 +68,53 @@ const UserItinerary = () => {
     };
 
     const handleDeleteConfirm = async () => {
-        tripService.setTripIsHidden(selectedId, true, accessToken);
-        setLoading(true);
-        setOpenDialog(false);
+        try {
+            await tripService.setTripIsHidden(selectedId, true, accessToken);
+            setLoading(true);
+            setOpenDialog(false);
+            // Refresh list
+            const trips = await tripService.getMyTrips(accessToken);
+            setItineraries(trips);
+        } catch (err) {
+            console.error("Failed to delete trip:", err);
+            setError(`Failed to delete trip: ${err.message || "Unknown error"}`);
+            setOpenDialog(false);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (error) {
+        return (
+            <Container maxWidth="xl">
+                <Alert severity="error">
+                    {error}
+                </Alert>
+            </Container>
+        );
+    }
+
+    // Show login prompt when not authenticated
+    if (!isAuthenticated) {
+        return (
+            <Container maxWidth="xl">
+                <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: '50vh',
+                    textAlign: 'center',
+                    gap: 2
+                }}>
+                    <Typography variant="h5">Please login to view your itineraries</Typography>
+                    <Typography variant="body1" color="text.secondary">
+                        Please click the "Login" button in the top right corner
+                    </Typography>
+                </Box>
+            </Container>
+        );
+    }
 
     return (
         <Container maxWidth={false} sx={{ mt: 4, fontFamily: "cursive" }}>
@@ -102,6 +151,10 @@ const UserItinerary = () => {
                     <Box display="flex" justifyContent="center">
                         <CircularProgress />
                     </Box>
+                ) : itineraries.length === 0 ? (
+                    <Typography variant="body1" textAlign="center" sx={{ py: 4 }}>
+                        You haven't created any itineraries yet
+                    </Typography>
                 ) : (
                     itineraries.map((itinerary) => (
                         <Paper
@@ -151,10 +204,10 @@ const UserItinerary = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenDialog(false)} color="primary">
-                        No
+                        Cancel
                     </Button>
-                    <Button onClick={() => handleDeleteConfirm()} color="error" autoFocus>
-                        Yes
+                    <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+                        Confirm
                     </Button>
                 </DialogActions>
             </Dialog>

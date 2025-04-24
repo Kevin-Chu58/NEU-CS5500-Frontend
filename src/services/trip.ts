@@ -1,7 +1,6 @@
 import http from "./http.ts";
 
-// <<<<<<< featuresOnApi
-// 定义数据模型
+// Define data models
 export type TripDetailViewModel = {
     id: number,
     name: string,
@@ -30,17 +29,26 @@ export type TripPatchViewModel = {
     description: string,
 }
 
-// 获取单个trip详情
+export type TripViewModel = {
+    id: number,
+    name: string,
+    description: string | null,
+    createdBy: number,
+    createdAt: string,
+    lastUpdatedAt: string
+};
+
+// Get single trip details
 const getTripDetail = async (tripId: number | string, token: string): Promise<TripDetailViewModel> => {
     console.log("getTripDetail called with ID:", tripId);
     console.log("API Base URL:", http.apiBaseURLs.api);
     
     try {
-        // 确保API路径正确
+        // Ensure API path is correct
         const endpoint = `api/trips/${tripId}`;
         console.log("Full API endpoint:", `${http.apiBaseURLs.api}/${endpoint}`);
         
-        // 直接使用fetch，避免可能的问题
+        // Use fetch directly to avoid potential issues
         const headers = new Headers();
         headers.append('Authorization', `Bearer ${token}`);
         headers.append('Accept', 'application/json');
@@ -63,7 +71,70 @@ const getTripDetail = async (tripId: number | string, token: string): Promise<Tr
     }
 }
 
-// 获取特定trip的所有small trips
+// Get all user trips
+const getMyTrips = async (token: string): Promise<TripViewModel[]> => {
+    console.log("getMyTrips called with token");
+    
+    try {
+        const endpoint = "api/trips/my";
+        console.log("Full API endpoint:", `${http.apiBaseURLs.api}/${endpoint}`);
+        
+        const headers = new Headers();
+        headers.append('Authorization', `Bearer ${token}`);
+        headers.append('Accept', 'application/json');
+        
+        const response = await fetch(`${http.apiBaseURLs.api}/${endpoint}`, {
+            method: 'GET',
+            headers: headers
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch my trips: ${response.status} ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        console.log("getMyTrips Response:", result);
+        return result;
+    } catch (error) {
+        console.error("Error in getMyTrips service:", error);
+        throw error;
+    }
+};
+
+// Set trip hidden status
+const setTripIsHidden = async (id: number, isHidden: boolean, token: string): Promise<TripViewModel> => {
+    console.log(`Setting trip ${id} isHidden to ${isHidden}`);
+    
+    try {
+        const endpoint = `api/trips/${id}/isHidden`;
+        const newIsHidden = JSON.stringify(isHidden);
+        
+        const headers = new Headers();
+        headers.append('Authorization', `Bearer ${token}`);
+        headers.append('Content-Type', 'application/json');
+        headers.append('Accept', 'application/json');
+        
+        const response = await fetch(`${http.apiBaseURLs.api}/${endpoint}`, {
+            method: 'PATCH',
+            headers: headers,
+            body: newIsHidden
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to update trip visibility: ${response.status} ${response.statusText}. Details: ${errorText}`);
+        }
+        
+        const result = await response.json();
+        console.log("setTripIsHidden Response:", result);
+        return result;
+    } catch (error) {
+        console.error("Error updating trip visibility:", error);
+        throw error;
+    }
+};
+
+// Get all small trips for a specific trip
 const getSmallTrips = async (tripId: number | string, token: string): Promise<SmallTripViewModel[]> => {
     console.log("getSmallTrips called with tripId:", tripId);
     
@@ -78,16 +149,16 @@ const getSmallTrips = async (tripId: number | string, token: string): Promise<Sm
     }
 }
 
-// 创建新的smallTrip (完全按照API文档)
+// Create new smallTrip (following API documentation)
 const createSmallTrip = async (tripId: number | string, data: Omit<SmallTripPostViewModel, "tripId">, token: string): Promise<SmallTripViewModel> => {
     console.log("Creating small trip for tripId:", tripId);
     console.log("Request data:", data);
     
     try {
-        // 根据API文档，应该使用 /api/SmallTrips 端点
+        // According to API docs, should use /api/SmallTrips endpoint
         const endpoint = `api/SmallTrips`;
         
-        // 准备请求体，添加tripId
+        // Prepare request body, add tripId
         const requestData = {
             tripId: Number(tripId),
             ...data
@@ -95,7 +166,7 @@ const createSmallTrip = async (tripId: number | string, data: Omit<SmallTripPost
         
         console.log("Full request data:", requestData);
         
-        // 发送POST请求
+        // Send POST request
         const headers = new Headers();
         headers.append('Authorization', `Bearer ${token}`);
         headers.append('Content-Type', 'application/json');
@@ -121,16 +192,16 @@ const createSmallTrip = async (tripId: number | string, data: Omit<SmallTripPost
     }
 }
 
-// 更新已有的smallTrip (完全按照API文档)
+// Update existing smallTrip (following API documentation)
 const updateSmallTrip = async (smallTripId: number | string, data: TripPatchViewModel, token: string): Promise<SmallTripViewModel> => {
     console.log("Updating small trip with ID:", smallTripId);
     console.log("Request data:", data);
     
     try {
-        // 根据API文档，应该使用 /api/SmallTrips/{id} 端点
+        // According to API docs, should use /api/SmallTrips/{id} endpoint
         const endpoint = `api/SmallTrips/${smallTripId}`;
         
-        // 发送PATCH请求
+        // Send PATCH request
         const headers = new Headers();
         headers.append('Authorization', `Bearer ${token}`);
         headers.append('Content-Type', 'application/json');
@@ -160,7 +231,9 @@ const tripService = {
     getTripDetail,
     getSmallTrips,
     createSmallTrip,
-    updateSmallTrip
+    updateSmallTrip,
+    getMyTrips,
+    setTripIsHidden
 }
 
 export default tripService; 
