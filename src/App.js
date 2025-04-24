@@ -5,6 +5,7 @@ import "./App.scss";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState, createContext } from "react";
 import userService from "./services/user.ts";
+import { getGlobalData, setGlobalData } from "./global";
 
 // 创建Auth上下文，用于跨组件共享accessToken
 export const AuthContext = createContext({ accessToken: null });
@@ -29,8 +30,9 @@ const App = () => {
             }
         }
         
-        if (isAuthenticated)
+        if (isAuthenticated) {
             updateAccessToken();
+        }
     }, [isAuthenticated, getAccessTokenSilently]);
 
     
@@ -48,6 +50,12 @@ const App = () => {
         }
         if (accessToken) {
             getCurrentUser();
+            // console.log(accessToken);
+            
+            setGlobalData({accessToken: accessToken});
+            const myGlobalData = getGlobalData();
+            // while (!getGlobalData("accessToken"))
+                // console.log(myGlobalData);
         }
     }, [accessToken]);
 

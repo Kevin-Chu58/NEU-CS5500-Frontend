@@ -1,8 +1,3 @@
-import { Navigate } from "react-router-dom";
-import Home from "./views/Home";
-import Itinerary from "./views/Itinerary";
-import TripDetails from "./views/TripDetails/TripDetails";
-
 const routes = [
   {
     name: "home",
@@ -11,8 +6,13 @@ const routes = [
   },
   {
     name: "itinerary",
-    path: "/itinerary",
+    path: "/itinerary/:id",
     element: <Itinerary />,
+  },
+  {
+    name: "UserItinerary",
+    path: "/my",
+    element: <UserItineraries />,
   },
   {
     name: "trip-details-redirect",
@@ -25,5 +25,3 @@ const routes = [
     element: <TripDetails />,
   }
 ];
-
-export default routes;

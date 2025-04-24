@@ -32,6 +32,11 @@ const pageLinks = [
         to: "/itinerary",
         ref: "itinerary",
     },
+    {
+        name: "my",
+        to: "/my",
+        ref: "my",
+    }
 ];
 
 const NavBar = () => {
