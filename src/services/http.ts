@@ -116,14 +116,32 @@ const makeRequest = async <TResponse>(
     headers?: Headers,
     token?: string,
 ): Promise<TResponse> => {
-    // console.log(`${method} request to endpoint ${endpoint}`);
-    const response = await fetch(`${apiBaseURL}/${endpoint}`, {
-        method,
-        body,
-        // headers: headers ?? new Headers(),
-        headers: await handleAuthHeader(headers ?? new Headers(), token ?? ""),
-    });
-    return parseResponse(response);
+    const fullUrl = `${apiBaseURL}/${endpoint}`;
+    console.log(`Making ${method} request to ${fullUrl}`);
+    
+    try {
+        if (body && typeof body === 'string') {
+            console.log(`Request body: ${body.substring(0, 200)}${body.length > 200 ? '...' : ''}`);
+        } else if (body) {
+            console.log('Request has body of type:', body.constructor.name);
+        }
+        
+        // 处理授权头
+        const requestHeaders = await handleAuthHeader(headers ?? new Headers(), token ?? "");
+        console.log('Request headers:', Array.from(requestHeaders.entries()));
+        
+        const response = await fetch(fullUrl, {
+            method,
+            body,
+            headers: requestHeaders,
+        });
+        
+        console.log(`Response status: ${response.status} ${response.statusText}`);
+        return parseResponse(response);
+    } catch (error) {
+        console.error(`Network error during ${method} request to ${fullUrl}:`, error);
+        throw error;
+    }
 };
 
 /**
@@ -136,25 +154,65 @@ export const parseResponse = async <TResponse>(
     res: Response
 ): Promise<TResponse> => {
     try {
-        const json = await res.text();
-        const data: TResponse = json.length ? JSON.parse(json) : {};
+        const contentType = res.headers.get('content-type');
+        console.log(`Response content-type: ${contentType}`);
+        
+        // 获取响应文本
+        const text = await res.text();
+        console.log(`Response text: ${text.substring(0, 200)}${text.length > 200 ? '...' : ''}`);
+        
+        // 检查是否为JSON
+        let data: TResponse;
+        if (contentType && contentType.includes('application/json') && text.length) {
+            data = JSON.parse(text) as TResponse;
+            console.log('Parsed JSON response:', data);
+        } else if (text.length) {
+            try {
+                // 尝试解析为JSON，即使Content-Type不是application/json
+                data = JSON.parse(text) as TResponse;
+                console.log('Response was parsed as JSON despite content-type:', data);
+            } catch (e) {
+                // 如果不是JSON，则作为文本返回
+                console.log('Response is not JSON, returning as-is');
+                data = text as unknown as TResponse;
+            }
+        } else {
+            // 空响应
+            data = {} as TResponse;
+            console.log('Empty response, returning empty object');
+        }
 
-        // Throw error when response status code is bad
+        // 检查响应状态
         if (!res.ok) {
+            const error = new Error(
+                `Request failed with status ${res.status}: ${res.statusText}`
+            );
             // @ts-ignore
-            return Promise.reject(createError(data, res));
+            error.response = res;
+            // @ts-ignore
+            error.data = data;
+            console.error('Request failed:', error);
+            return Promise.reject(error);
         }
 
         return data;
     } catch (err) {
-        // Handle error if response body is not valid JSON
+        console.error('Error parsing response:', err);
         return Promise.reject(err);
     }
 };
 
 const handleAuthHeader = async (headers: Headers, token: string): Promise<Headers> => {
-    headers.append('Authorization', `Bearer ${token}`);
-    // headers.append('Accept', 'application/json');
+    // 只在提供有效令牌时添加Authorization头
+    if (token && token.trim() !== '') {
+        console.log("Adding Authorization header with provided token");
+        headers.append('Authorization', `Bearer ${token}`);
+    } else {
+        console.log("No token provided for Authorization header");
+    }
+    
+    // 添加其他可能需要的头
+    headers.append('Accept', 'application/json');
     return headers;
 };
 
@@ -231,11 +289,7 @@ const toQueryString = (
 };
 
 const apiBaseURLs = {
-    api: 
-    // process.env.REACT_APP_API_URL_LOCAL 
-    // ?? 
-    process.env.REACT_APP_API_URL_PRODUCTION
-    ?? "",
+    api: "https://travel-tips-api-epe5bnd7hza6h9eg.westus2-01.azurewebsites.net",
 };
 
 const http = {

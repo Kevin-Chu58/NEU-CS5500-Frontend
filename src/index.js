@@ -9,6 +9,15 @@ let domain = process.env.REACT_APP_AUTH0_DOMAIN;
 let clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 let audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
+// 自定义重定向回调
+const onRedirectCallback = (appState) => {
+  // 如果有保存的URL，则导航到该URL，否则导航到根路径
+  window.history.replaceState({}, 
+    document.title,
+    appState?.returnTo || window.location.pathname
+  );
+};
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -17,8 +26,11 @@ root.render(
             clientId={clientId}
             audience={audience}
             authorizationParams={{
-                redirect_uri: window.location.origin,
+                redirect_uri: window.location.origin + window.location.pathname,
             }}
+            onRedirectCallback={onRedirectCallback}
+            useRefreshTokens={true}
+            cacheLocation="localstorage"
         >
       <Router>
         <App />

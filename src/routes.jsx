@@ -1,8 +1,3 @@
-import Home from "./views/Home";
-import Itinerary from "./views/Itinerary";
-import UserItineraries from "./views/UserItinerary/Index";
-import TripDetails from "./views/TripDetails/TripDetails";
-
 const routes = [
   {
     name: "home",
@@ -20,10 +15,13 @@ const routes = [
     element: <UserItineraries />,
   },
   {
-    name: "trip-details",
+    name: "trip-details-redirect",
     path: "/trip-details",
+    element: <Navigate to="/" replace />,
+  },
+  {
+    name: "trip-details-with-id",
+    path: "/trips/:id",
     element: <TripDetails />,
   }
 ];
-
-export default routes;

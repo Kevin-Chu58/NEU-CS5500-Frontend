@@ -233,7 +233,9 @@ const NavBar = () => {
                                 onClick={() => loginWithRedirect({
                                     authorizationParams: {
                                         audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+                                        redirect_uri: window.location.origin + window.location.pathname,
                                     },
+                                    appState: { returnTo: window.location.pathname }
                                 })}
                                 sx={{ my: 2, color: "white" }}
                             >
