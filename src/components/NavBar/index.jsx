@@ -27,11 +27,11 @@ const pageLinks = [
         to: "",
         ref: "",
     },
-    {
-        name: "itinerary",
-        to: "/itinerary/1",
-        ref: "itinerary",
-    },
+    // {
+    //     name: "itinerary",
+    //     to: "/itinerary/1",
+    //     ref: "itinerary",
+    // },
     {
         name: "my",
         to: "/my",
@@ -40,7 +40,7 @@ const pageLinks = [
 ];
 
 const NavBar = () => {
-    const { user, isAuthenticated, loginWithRedirect, logout, getAccessTokenSilently } = useAuth0();
+    const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
     const [anchorElNav, setAnchorElNav] = useState(null); // mobile view
     const [anchorElUser, setAnchorElUser] = useState(null); // all views
     const [onPage, setOnPage] = useState(null); // all views - highlight the nav button of current page

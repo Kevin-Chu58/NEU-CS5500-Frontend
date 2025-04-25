@@ -24,15 +24,18 @@ export type SmallTripPostViewModel = {
     description: string,
 }
 
-export type TripPatchViewModel = {
+type TripPostViewModel = {
     name: string,
-    description: string,
+    description: string | null
+};
+
+export type TripPatchViewModel = {
+    name: string | null,
+    description: string | null,
 }
 
-export type TripViewModel = {
+export type TripViewModel = TripPostViewModel & {
     id: number,
-    name: string,
-    description: string | null,
     createdBy: number,
     createdAt: string,
     lastUpdatedAt: string
@@ -69,6 +72,11 @@ const getTripDetail = async (tripId: number | string, token: string): Promise<Tr
         console.error("Error in getTripDetail service:", error);
         throw error;
     }
+}
+
+// Get a trip detail you own
+const getMyTripDetail = async (id: number, token: string): Promise<TripDetailViewModel> => {
+    return await http.get(http.apiBaseURLs.api, `api/trips/my/${id}`, token);
 }
 
 // Get all user trips
@@ -147,6 +155,12 @@ const getSmallTrips = async (tripId: number | string, token: string): Promise<Sm
         console.error("Error in getSmallTrips service:", error);
         throw error;
     }
+}
+
+// create a new trip
+const createTrip = async (newTrip: TripPostViewModel, token: string): Promise<TripViewModel> => {
+    var tripPostViewModel = JSON.stringify(newTrip);
+    return await http.post(http.apiBaseURLs.api, "api/trips", tripPostViewModel, new Headers(), token);
 }
 
 // Create new smallTrip (following API documentation)
@@ -229,7 +243,9 @@ const updateSmallTrip = async (smallTripId: number | string, data: TripPatchView
 
 const tripService = {
     getTripDetail,
+    getMyTripDetail,
     getSmallTrips,
+    createTrip,
     createSmallTrip,
     updateSmallTrip,
     getMyTrips,

@@ -13,7 +13,6 @@ export const AuthContext = createContext({ accessToken: null });
 const App = () => {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0();
     const [accessToken, setAccessToken] = useState();
-    const [user, setUser] = useState();
 
     useEffect(() => {
         const updateAccessToken = async () => {
@@ -41,8 +40,12 @@ const App = () => {
             try {
                 if (accessToken) {
                     const userData = await userService.getCurrentUser(accessToken);
-                    setUser(userData);
+                    setGlobalData({
+                        accessToken: accessToken,
+                        user: userData
+                    });
                     console.log("User data retrieved:", userData);
+                    console.log("Global Data:", getGlobalData());
                 }
             } catch (error) {
                 console.error("Failed to get user data:", error);
@@ -50,9 +53,6 @@ const App = () => {
         }
         if (accessToken) {
             getCurrentUser();
-            
-            setGlobalData({accessToken: accessToken});
-            const myGlobalData = getGlobalData();
         }
     }, [accessToken]);
 
