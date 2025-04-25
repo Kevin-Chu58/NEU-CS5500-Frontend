@@ -47,7 +47,7 @@ const UserItinerary = () => {
                     return;
                 }
                 
-                setAccessToken(globalData.accessToken);
+            setAccessToken(globalData.accessToken);
                 const trips = await tripService.getMyTrips(globalData.accessToken);
                 setItineraries(trips);
                 setError(null);
@@ -70,8 +70,8 @@ const UserItinerary = () => {
     const handleDeleteConfirm = async () => {
         try {
             await tripService.setTripIsHidden(selectedId, true, accessToken);
-            setLoading(true);
-            setOpenDialog(false);
+        setLoading(true);
+        setOpenDialog(false);
             // Refresh list
             const trips = await tripService.getMyTrips(accessToken);
             setItineraries(trips);
