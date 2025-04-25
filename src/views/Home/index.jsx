@@ -139,8 +139,8 @@ const Home = () => {
   };
 */
   const sortedResults = [...results].sort((a, b) => {
-    const aTime = new Date(a.LastUpdatedAt).getTime();
-    const bTime = new Date(b.LastUpdatedAt).getTime();
+    const aTime = new Date(a.lastUpdatedAt).getTime();
+    const bTime = new Date(b.lastUpdatedAt).getTime();
 
     return sortOrder === "asc" ? bTime - aTime : aTime - bTime;
   });
@@ -266,14 +266,21 @@ const Home = () => {
                     lineHeight: 1.4,
                   }}
                 >
-                  <ImageThumb size="small" shape="rounded" /> {trip.name || trip.Name}
+                  <ImageThumb size="small" shape="rounded" />{" "}
+                  {trip.name || trip.Name}
                 </Typography>
                 <Box sx={{ pl: 7 }}>
                   <Typography variant="body2" sx={{ mb: 0.5 }}>
-                    Created: {new Date(trip.createdAt || trip.CreatedAt).toLocaleString()}
+                    Created:{" "}
+                    {new Date(
+                      trip.createdAt || trip.CreatedAt
+                    ).toLocaleString()}
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 0.8 }}>
-                    Updated: {new Date(trip.lastUpdatedAt || trip.LastUpdatedAt).toLocaleString()}
+                    Updated:{" "}
+                    {new Date(
+                      trip.lastUpdatedAt || trip.LastUpdatedAt
+                    ).toLocaleString()}
                   </Typography>
                   <Typography
                     variant="body2"
