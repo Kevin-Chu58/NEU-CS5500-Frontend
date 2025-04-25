@@ -19,6 +19,11 @@ import {
 import tripService from "../../services/trip.ts";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getGlobalData } from "../../global.js";
+// 添加Material-UI图标
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import FolderIcon from "@mui/icons-material/Folder";
+import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddIcon from "@mui/icons-material/Add";
 
 const UserItinerary = () => {
@@ -126,9 +131,121 @@ const UserItinerary = () => {
 
   if (error) {
     return (
-      <Container maxWidth="xl">
-        <Alert severity="error">{error}</Alert>
-      </Container>
+        <Container maxWidth={false} disableGutters>
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    pt: 4,
+                    transition: "all 0.5s ease",
+                }}
+            >
+                <Typography
+                    color="primary"
+                    variant="h2"
+                    sx={{
+                        mb: 2,
+                        fontFamily: "inherit",
+                        fontWeight: "bold",
+                        fontSize: "48px",
+                        textAlign: "center",
+                    }}
+                >
+                    <ListAltIcon fontSize="large" /> MY ITINERARIES
+                </Typography>
+
+                <Box
+                    sx={{
+                        width: "80%",
+                        maxWidth: 800,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                        mb: 4,
+                        maxHeight: "600px",
+                        overflowY: "auto",
+                    }}
+                >
+                    {loading ? (
+                        <Box display="flex" justifyContent="center">
+                            <CircularProgress />
+                        </Box>
+                    ) : itineraries.length === 0 ? (
+                        <Typography variant="body1" textAlign="center" sx={{ py: 4 }}>
+                            You haven't created any itineraries yet
+                        </Typography>
+                    ) : (
+                        itineraries.map((itinerary) => (
+                            <Card
+                                key={itinerary.id}
+                                elevation={2}
+                                sx={{
+                                    cursor: "pointer",
+                                    p: 0,
+                                    borderRadius: 2,
+                                    boxShadow: 2,
+                                    transition: "box-shadow 0.2s ease-in-out",
+                                    ":hover": {
+                                        boxShadow: 6,
+                                    },
+                                }}
+                            >
+                                <CardContent sx={{ p: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{ 
+                                            fontWeight: "bold",
+                                            color: "#2e7d32", 
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                        }}
+                                    >
+                                        <FolderIcon /> {itinerary.name}
+                                    </Typography>
+                                    <Stack direction="row" spacing={2}>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => navigate(`/trips/${itinerary.id}`)}
+                                            sx={{ borderRadius: 5 }}
+                                            startIcon={<VisibilityIcon />}
+                                        >
+                                            View
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="error"
+                                            onClick={() => handleDeleteClick(itinerary.id)}
+                                            sx={{ borderRadius: 5 }}
+                                            startIcon={<DeleteIcon />}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </Stack>
+                                </CardContent>
+                            </Card>
+                        ))
+                    )}
+                </Box>
+            </Box>
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    Are you sure you want to delete this itinerary?
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Container>
     );
   }
 

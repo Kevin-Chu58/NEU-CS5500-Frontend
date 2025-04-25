@@ -18,9 +18,9 @@ const App = () => {
         const updateAccessToken = async () => {
             try {
                 const token = await getAccessTokenSilently({
-                    authorizationParams: {
-                        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-                    }
+                authorizationParams: {
+                    audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+                }
                 });
                 console.log("Got Auth0 token");
                 setAccessToken(token);

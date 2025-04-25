@@ -241,6 +241,41 @@ const updateSmallTrip = async (smallTripId: number | string, data: TripPatchView
     }
 }
 
+// Update trip (main trip) details
+const updateTrip = async (id: number | string, data: TripPatchViewModel, token: string): Promise<TripViewModel> => {
+    console.log("Updating trip with ID:", id);
+    console.log("Request data:", data);
+    
+    try {
+        // 使用api/trips/{id}端点
+        const endpoint = `api/trips/${id}`;
+        
+        // 发送PATCH请求
+        const headers = new Headers();
+        headers.append('Authorization', `Bearer ${token}`);
+        headers.append('Content-Type', 'application/json');
+        headers.append('Accept', 'application/json');
+        
+        const response = await fetch(`${http.apiBaseURLs.api}/${endpoint}`, {
+            method: 'PATCH',
+            headers: headers,
+            body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to update trip: ${response.status} ${response.statusText}. Details: ${errorText}`);
+        }
+        
+        const result = await response.json();
+        console.log("Update Trip Response:", result);
+        return result;
+    } catch (error) {
+        console.error("Error updating trip:", error);
+        throw error;
+    }
+}
+
 const tripService = {
     getTripDetail,
     getMyTripDetail,
@@ -249,7 +284,8 @@ const tripService = {
     createSmallTrip,
     updateSmallTrip,
     getMyTrips,
-    setTripIsHidden
+    setTripIsHidden,
+    updateTrip
 }
 
 export default tripService; 
@@ -279,3 +315,4 @@ export default tripService;
 
 // export default tripService;
 // >>>>>>> main
+ 
