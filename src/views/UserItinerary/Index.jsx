@@ -55,7 +55,15 @@ const UserItinerary = () => {
   }, []);
 
   useEffect(() => {
+    const setLastTripPublic = async () => {
+        await tripService.setTripIsPublic(id, true, accessToken);
+    }
+
     setLoading(false);
+    if (itineraries.length > 0) {
+        var id = itineraries[itineraries.length - 1].id;
+        setLastTripPublic();
+    }
   }, [itineraries]);
 
   useEffect(() => {
