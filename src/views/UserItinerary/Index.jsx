@@ -18,7 +18,9 @@ import {
 import tripService from "../../services/trip.ts";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getGlobalData } from "../../global.js";
-// 添加Material-UI图标
+// Import ImageThumb component
+import ImageThumb from "../../components/ImageThumb/index.jsx";
+// Keep original icons for reference
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import FolderIcon from "@mui/icons-material/Folder";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -134,35 +136,48 @@ const UserItinerary = () => {
                     transition: "all 0.5s ease",
                 }}
             >
-                <Typography
-                    color="primary"
-                    variant="h2"
-                    sx={{
-                        mb: 2,
-                        fontFamily: "inherit",
-                        fontWeight: "bold",
-                        fontSize: "48px",
-                        textAlign: "center",
-                    }}
-                >
-                    <ListAltIcon fontSize="large" /> MY ITINERARIES
-                </Typography>
-
+                {/* Page title */}
                 <Box
                     sx={{
-                        width: "80%",
-                        maxWidth: 800,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 3,
+                        mb: 4,
+                        flexWrap: "wrap",
+                        justifyContent: "center",
+                    }}
+                >
+                    <ImageThumb size="large" shape="circle" />
+                    <Typography
+                        color="primary"
+                        variant="h2"
+                        sx={{
+                            fontFamily: "inherit",
+                            fontWeight: "bold",
+                            fontSize: "48px",
+                            lineHeight: 1.2,
+                        }}
+                    >
+                        MY ITINERARIES
+                    </Typography>
+                </Box>
+
+                {/* Itinerary list container */}
+                <Box
+                    sx={{
+                        width: "85%",
+                        maxWidth: 950,
                         display: "flex",
                         flexDirection: "column",
                         gap: 2,
                         mb: 4,
-                        maxHeight: "600px",
+                        maxHeight: "700px",
                         overflowY: "auto",
                     }}
                 >
                     {loading ? (
-                        <Box display="flex" justifyContent="center">
-                            <CircularProgress />
+                        <Box display="flex" justifyContent="center" sx={{ py: 3 }}>
+                            <CircularProgress size={50} />
                         </Box>
                     ) : itineraries.length === 0 ? (
                         <Typography variant="body1" textAlign="center" sx={{ py: 4 }}>
@@ -174,49 +189,102 @@ const UserItinerary = () => {
                                 key={itinerary.id}
                                 elevation={2}
                                 sx={{
-                                    cursor: "pointer",
-                                    p: 0,
+                                    width: "100%",
                                     borderRadius: 2,
                                     boxShadow: 2,
-                                    transition: "box-shadow 0.2s ease-in-out",
-                                    ":hover": {
-                                        boxShadow: 6,
-                                    },
+                                    overflow: "visible",
+                                    mb: 1,
                                 }}
                             >
-                                <CardContent sx={{ p: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{ 
-                                            fontWeight: "bold",
-                                            color: "#2e7d32", 
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 1,
-                                        }}
-                                    >
-                                        <FolderIcon /> {itinerary.name}
-                                    </Typography>
-                                    <Stack direction="row" spacing={2}>
+                                <CardContent 
+                                    sx={{ 
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        py: 2,
+                                        px: 3,
+                                        "&:last-child": {
+                                            pb: 2,
+                                        }
+                                    }}
+                                >
+                                    {/* Title area */}
+                                    <Box sx={{ 
+                                        display: "flex", 
+                                        alignItems: "center", 
+                                        gap: 2
+                                    }}>
+                                        <Box 
+                                            sx={{ 
+                                                width: 44,
+                                                height: 44,
+                                                flexShrink: 0,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                "& > *": {
+                                                    width: "44px !important",
+                                                    height: "44px !important",
+                                                    minWidth: "44px !important",
+                                                    minHeight: "44px !important",
+                                                    maxWidth: "44px !important",
+                                                    maxHeight: "44px !important",
+                                                }
+                                            }}
+                                        >
+                                            <ImageThumb 
+                                                size="small" 
+                                                shape="rounded" 
+                                            />
+                                        </Box>
+                                        <Typography
+                                            variant="subtitle1"
+                                            sx={{ 
+                                                fontWeight: "bold",
+                                                color: "#2e7d32",
+                                                maxWidth: {xs: "150px", sm: "200px", md: "250px"},
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                whiteSpace: "nowrap"
+                                            }}
+                                        >
+                                            {itinerary.name}
+                                        </Typography>
+                                    </Box>
+                                    
+                                    {/* Buttons - smaller size */}
+                                    <Box sx={{ display: "flex", gap: 1 }}>
                                         <Button
                                             variant="contained"
                                             color="primary"
+                                            size="small"
                                             onClick={() => navigate(`/trips/${itinerary.id}`)}
-                                            sx={{ borderRadius: 5 }}
-                                            startIcon={<VisibilityIcon />}
+                                            sx={{ 
+                                                borderRadius: 2,
+                                                minWidth: "70px",
+                                                height: "32px",
+                                                fontSize: "0.75rem"
+                                            }}
+                                            startIcon={<VisibilityIcon sx={{ fontSize: "1rem" }} />}
                                         >
                                             View
                                         </Button>
                                         <Button
                                             variant="contained"
                                             color="error"
+                                            size="small"
                                             onClick={() => handleDeleteClick(itinerary.id)}
-                                            sx={{ borderRadius: 5 }}
-                                            startIcon={<DeleteIcon />}
+                                            sx={{ 
+                                                borderRadius: 2,
+                                                minWidth: "70px",
+                                                height: "32px",
+                                                fontSize: "0.75rem"
+                                            }}
+                                            startIcon={<DeleteIcon sx={{ fontSize: "1rem" }} />}
                                         >
                                             Delete
                                         </Button>
-                                    </Stack>
+                                    </Box>
                                 </CardContent>
                             </Card>
                         ))

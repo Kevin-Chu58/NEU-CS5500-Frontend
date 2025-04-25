@@ -466,16 +466,19 @@ const TripDetails = () => {
                                 }}
                             >
                                 <CardContent sx={{ p: 3 }}>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                                         <Typography 
                                             variant="h4" 
                                             sx={{
                                                 fontWeight: "bold",
                                                 color: "#2e7d32",
-                                                mb: 0.5,
+                                                mb: 1,
                                                 display: "flex",
                                                 alignItems: "center",
-                                                gap: 1,
+                                                gap: 2, 
+                                                pt: 1,
+                                                flexWrap: "wrap",
+                                                lineHeight: 1.3,
                                             }}
                                         >
                                             <ImageThumb size="large" shape="circle" /> {trip.name}
@@ -484,7 +487,10 @@ const TripDetails = () => {
                                             variant="contained" 
                                             color="primary"
                                             onClick={handleEditMainTrip}
-                                            sx={{ borderRadius: 2 }}
+                                            sx={{ 
+                                                borderRadius: 2,
+                                                mt: 2
+                                            }}
                                         >
                                             Edit Trip
                                         </Button>
@@ -560,8 +566,8 @@ const TripDetails = () => {
                                             },
                                         }}
                                     >
-                                        <CardContent sx={{ p: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                            <Box>
+                                        <CardContent sx={{ p: 2.5, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                            <Box sx={{ flexGrow: 1, pr: 2 }}>
                                                 <Typography 
                                                     variant="h6" 
                                                     sx={{
@@ -570,7 +576,9 @@ const TripDetails = () => {
                                                         mb: 0.5,
                                                         display: "flex",
                                                         alignItems: "center",
-                                                        gap: 1,
+                                                        gap: 2,
+                                                        flexWrap: "wrap",
+                                                        lineHeight: 1.3,
                                                     }}
                                                 >
                                                     <ImageThumb size="small" shape="rounded" /> {subTrip.name}
@@ -583,6 +591,7 @@ const TripDetails = () => {
                                                         maxWidth: "100%",
                                                         overflow: "hidden",
                                                         textOverflow: "ellipsis",
+                                                        ml: 7,
                                                     }}
                                                 >
                                                     {subTrip.description}
@@ -592,7 +601,10 @@ const TripDetails = () => {
                                                 variant="contained"
                                                 size="small"
                                                 onClick={() => handleEdit(subTrip)}
-                                                sx={{ borderRadius: 5 }}
+                                                sx={{ 
+                                                    borderRadius: 5,
+                                                    flexShrink: 0
+                                                }}
                                             >
                                                 Edit
                                             </Button>

@@ -6,6 +6,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState, createContext } from "react";
 import userService from "./services/user.ts";
 import { getGlobalData, setGlobalData } from "./global";
+import GlobalBackground from "./components/GlobalBackground";
 
 // Create Auth context for sharing accessToken across components
 export const AuthContext = createContext({ accessToken: null });
@@ -58,16 +59,18 @@ const App = () => {
 
     return (
         <AuthContext.Provider value={{ accessToken }}>
-            <NavBar />
-            <Routes>
-                {routes.map((route) => (
-                    <Route
-                        key={route.path}
-                        path={route.path}
-                        element={route.element}
-                    />
-                ))}
-            </Routes>
+            <GlobalBackground>
+                <NavBar />
+                <Routes>
+                    {routes.map((route) => (
+                        <Route
+                            key={route.path}
+                            path={route.path}
+                            element={route.element}
+                        />
+                    ))}
+                </Routes>
+            </GlobalBackground>
         </AuthContext.Provider>
     );
 }

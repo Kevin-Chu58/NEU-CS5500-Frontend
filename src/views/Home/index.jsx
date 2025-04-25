@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import http from "../../services/http.ts";
+import ImageThumb from "../../components/ImageThumb/index.jsx";
 import ExploreIcon from "@mui/icons-material/Explore";
 
 const Home = () => {
@@ -256,33 +257,38 @@ const Home = () => {
                     fontSize: "1.25rem",
                     fontWeight: "bold",
                     color: "#2e7d32",
-                    mb: 0.5,
+                    mb: 1,
                     display: "flex",
                     alignItems: "center",
-                    gap: 1,
+                    gap: 2,
+                    py: 0.5,
+                    flexWrap: "wrap",
+                    lineHeight: 1.4,
                   }}
                 >
-                  <ExploreIcon /> {trip.name || trip.Name}
+                  <ImageThumb size="small" shape="rounded" /> {trip.name || trip.Name}
                 </Typography>
-                <Typography variant="body2">
-                  Created: {new Date(trip.createdAt || trip.CreatedAt).toLocaleString()}
-                </Typography>
-                <Typography variant="body2">
-                  Updated: {new Date(trip.lastUpdatedAt || trip.LastUpdatedAt).toLocaleString()}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="primary"
-                  noWrap
-                  sx={{
-                    fontSize: "1rem",
-                    maxWidth: "100%",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {trip.description || trip.Description}
-                </Typography>
+                <Box sx={{ pl: 7 }}>
+                  <Typography variant="body2" sx={{ mb: 0.5 }}>
+                    Created: {new Date(trip.createdAt || trip.CreatedAt).toLocaleString()}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 0.8 }}>
+                    Updated: {new Date(trip.lastUpdatedAt || trip.LastUpdatedAt).toLocaleString()}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="primary"
+                    noWrap
+                    sx={{
+                      fontSize: "1rem",
+                      maxWidth: "100%",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {trip.description || trip.Description}
+                  </Typography>
+                </Box>
               </CardContent>
             </Card>
           ))}
