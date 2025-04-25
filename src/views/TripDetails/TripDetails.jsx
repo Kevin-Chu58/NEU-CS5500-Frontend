@@ -30,6 +30,26 @@ import MapIcon from "@mui/icons-material/Map";
 import PersonIcon from "@mui/icons-material/Person";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
+// Add function to generate random English names
+const generateRandomName = () => {
+    const firstNames = [
+        "James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Thomas", "Charles",
+        "Mary", "Patricia", "Jennifer", "Linda", "Elizabeth", "Barbara", "Susan", "Jessica", "Sarah", "Karen",
+        "Alex", "Taylor", "Jordan", "Casey", "Riley", "Avery", "Quinn", "Skyler", "Reese", "Dakota"
+    ];
+    
+    const lastNames = [
+        "Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson", "Moore", "Taylor",
+        "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Robinson",
+        "Lee", "Walker", "Hall", "Allen", "Young", "King", "Wright", "Scott", "Green", "Baker"
+    ];
+    
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    
+    return `${firstName} ${lastName}`;
+};
+
 // JWT parse function
 const parseJwt = (token) => {
     try {
@@ -47,6 +67,7 @@ const TripDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [userData, setUserData] = useState(null);
+    const [creatorName, setCreatorName] = useState("");
 
     // Form dialog control
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -120,6 +141,8 @@ const TripDetails = () => {
                 
                 if (data) {
                     setTrip(data);
+                    // Generate random name for creator when trip data is loaded
+                    setCreatorName(generateRandomName());
                     setError(null);
                     console.log("Trip data successfully set to state:", data);
                 } else {
@@ -513,7 +536,12 @@ const TripDetails = () => {
                                     </Typography>
                                     
                                     <Box sx={{ display: 'flex', mt: 2, gap: 1 }}>
-                                        <Chip label={`Created by: ${trip.createdBy}`} size="small" color="primary" />
+                                        <Chip 
+                                            label={`Created by: ${creatorName} (UserId: ${trip.createdBy})`} 
+                                            size="small" 
+                                            color="primary" 
+                                            icon={<PersonIcon fontSize="small" />}
+                                        />
                                     </Box>
                                 </CardContent>
                             </Card>
