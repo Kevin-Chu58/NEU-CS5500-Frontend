@@ -15,6 +15,8 @@ import {
   TextField,
   Alert,
   Grid2 as Grid,
+  Card,
+  CardContent,
 } from "@mui/material";
 import tripService from "../../services/trip.ts";
 import { useAuth0 } from "@auth0/auth0-react";
