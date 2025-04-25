@@ -109,6 +109,12 @@ const getMyTrips = async (token: string): Promise<TripViewModel[]> => {
     }
 };
 
+// set trip public status
+const setTripIsPublic = async (id: number, isPublic: boolean, token: string): Promise<TripViewModel> => {
+    var publicStatus = JSON.stringify(isPublic);
+    return await http.patch(http.apiBaseURLs.api, `api/trips/${id}/isPublic`, publicStatus, new Headers(), token);
+}
+
 // Set trip hidden status
 const setTripIsHidden = async (id: number, isHidden: boolean, token: string): Promise<TripViewModel> => {
     console.log(`Setting trip ${id} isHidden to ${isHidden}`);
@@ -284,6 +290,7 @@ const tripService = {
     createSmallTrip,
     updateSmallTrip,
     getMyTrips,
+    setTripIsPublic,
     setTripIsHidden,
     updateTrip
 }
