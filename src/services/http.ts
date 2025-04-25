@@ -131,13 +131,13 @@ const makeRequest = async <TResponse>(
         console.log('Request headers:', Array.from(requestHeaders.entries()));
         
         const response = await fetch(fullUrl, {
-            method,
-            body,
+        method,
+        body,
             headers: requestHeaders,
-        });
+    });
         
         console.log(`Response status: ${response.status} ${response.statusText}`);
-        return parseResponse(response);
+    return parseResponse(response);
     } catch (error) {
         console.error(`Network error during ${method} request to ${fullUrl}:`, error);
         throw error;
@@ -206,7 +206,7 @@ const handleAuthHeader = async (headers: Headers, token: string): Promise<Header
     // 只在提供有效令牌时添加Authorization头
     if (token && token.trim() !== '') {
         console.log("Adding Authorization header with provided token");
-        headers.append('Authorization', `Bearer ${token}`);
+    headers.append('Authorization', `Bearer ${token}`);
     } else {
         console.log("No token provided for Authorization header");
     }
