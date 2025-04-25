@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import http from "../../services/http.ts";
+import ExploreIcon from "@mui/icons-material/Explore";
 
 const Home = () => {
   const [results, setResults] = useState([]);
@@ -256,9 +257,12 @@ const Home = () => {
                     fontWeight: "bold",
                     color: "#2e7d32",
                     mb: 0.5,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
                   }}
                 >
-                  🌍 {trip.name || trip.Name}
+                  <ExploreIcon /> {trip.name || trip.Name}
                 </Typography>
                 <Typography variant="body2">
                   Created: {new Date(trip.createdAt || trip.CreatedAt).toLocaleString()}
