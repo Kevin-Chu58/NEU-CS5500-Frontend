@@ -6,78 +6,169 @@ import {
     Stack,
     Rating,
     Chip,
+    Box,
+    Card,
+    CardContent,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
+// 添加Material-UI图标
+import MapIcon from "@mui/icons-material/Map";
+import StarIcon from "@mui/icons-material/Star";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import PersonIcon from "@mui/icons-material/Person";
 
 const Itinerary = () => {
     const { id } = useParams();
 
     return (
-        <Container maxWidth="xl" sx={{mt: 4}}>
-            <Typography variant="subtitle1" color="primary" gutterBottom>
-                Viewing Itinerary ID: {id}
-            </Typography>
-            
-            <Stack direction="row">
-                <Container maxWidth="md">
-                    <Grid
-                        container
-                        spacing={1}
+        <Container maxWidth={false} disableGutters>
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    pt: 4,
+                    transition: "all 0.5s ease",
+                }}
+            >
+                <Typography
+                    color="primary"
+                    variant="h2"
+                    sx={{
+                        mb: 2,
+                        fontFamily: "inherit",
+                        fontWeight: "bold",
+                        fontSize: "48px",
+                        textAlign: "center",
+                    }}
+                >
+                    <MapIcon fontSize="large" /> ITINERARY DETAILS
+                </Typography>
+                
+                <Box
+                    sx={{
+                        width: "80%",
+                        maxWidth: 1000,
+                        mb: 4,
+                    }}
+                >
+                    <Card
+                        elevation={3}
                         sx={{
-                            m: 1,
+                            p: 0,
+                            borderRadius: 2,
+                            boxShadow: 2,
+                            mb: 3,
+                            transition: "box-shadow 0.2s ease-in-out",
+                            ":hover": {
+                                boxShadow: 6,
+                            },
                         }}
                     >
-                        <Grid spacing={0}>
-                            <Grid size={12} margin={0}>
-                                <Typography variant="h4">Title</Typography>
-                                
-                <Typography sx={{ ml: "auto" }}>Last edited: Jan 20, 2023</Typography>
-                                
+                        <CardContent sx={{ p: 3 }}>
+                            <Grid container spacing={2}>
+                                <Grid xs={12} sx={{ display: "flex", justifyContent: "space-between" }}>
+                                    <Typography
+                                        variant="h4"
+                                        sx={{
+                                            fontWeight: "bold",
+                                            color: "#2e7d32",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                        }}
+                                    >
+                                        Itinerary Title
+                                    </Typography>
+                                    <Typography
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                            color: "text.secondary",
+                                        }}
+                                    >
+                                        <AccessTimeIcon fontSize="small" /> Last edited: Jan 20, 2023
+                                    </Typography>
+                                </Grid>
+                                <Grid xs={12}>
+                                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                        <StarIcon color="primary" fontSize="small" />
+                                        <Rating name="half-rating" defaultValue={2.5} precision={0.5} />
+                                    </Box>
+                                </Grid>
+                                <Grid xs={12}>
+                                    <Chip
+                                        label="seattle"
+                                        size="small"
+                                        color="primary"
+                                        sx={{ mr: 1 }}
+                                    />
+                                </Grid>
+                                <Grid xs={12} sx={{ mt: 2 }}>
+                                    <Typography variant="subtitle1" fontWeight="bold">
+                                        Content Preview
+                                    </Typography>
+                                    <Skeleton variant="rounded" height={20} sx={{ mt: 1 }} />
+                                    <Skeleton variant="rounded" height={100} sx={{ mt: 2 }} />
+                                    <Skeleton variant="rounded" height={20} sx={{ mt: 2 }} />
+                                </Grid>
                             </Grid>
-                            <Grid size={12}>
-                                <Rating name="half-rating"  defaultValue={2.5} precision={0.5} />
-                            </Grid>
-                            <Grid size={12}>
-                                <Chip label="seattle" size="small" color="primary" />
-                            </Grid>
-                        </Grid>
-                        
-                         {/* content */}
-                        <Grid size={12}>
-                            <Skeleton variant="rounded" height={20}></Skeleton>
-                        </Grid>
-                        <Grid size={12}>
-                            <Skeleton variant="rounded" height={100}></Skeleton>
-                        </Grid>
-                        <Grid size={12}>
-                            <Skeleton variant="rounded" height={20}></Skeleton>
-                        </Grid>
-                    </Grid>
-                </Container>
+                        </CardContent>
+                    </Card>
 
-                <Container maxWidth="xs">
-                    <Grid
-                        container
-                        spacing={1}
+                    <Card
+                        elevation={3}
                         sx={{
-                            m: 1,
+                            p: 0,
+                            borderRadius: 2,
+                            boxShadow: 2,
+                            transition: "box-shadow 0.2s ease-in-out",
+                            ":hover": {
+                                boxShadow: 6,
+                            },
                         }}
                     >
-                        <Grid size={12} spacing={0}>
-                            <Grid size={12}>
-                                Author profile widget (TODO BELOW):
-                                <Skeleton variant="rounded" height={60}/>
+                        <CardContent sx={{ p: 3 }}>
+                            <Grid container spacing={2}>
+                                <Grid xs={12}>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            fontWeight: "bold",
+                                            color: "#2e7d32",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                            mb: 2,
+                                        }}
+                                    >
+                                        <PersonIcon /> Author Profile
+                                    </Typography>
+                                    <Skeleton variant="rounded" height={60} />
+                                </Grid>
+                                <Grid xs={12} sx={{ mt: 2 }}>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            fontWeight: "bold",
+                                            color: "#2e7d32",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                            mb: 2,
+                                        }}
+                                    >
+                                        Navigation
+                                    </Typography>
+                                    <Skeleton variant="rounded" height={100} />
+                                </Grid>
                             </Grid>
-                        </Grid>
-
-                        {/* content */}
-                        <Grid size={12}>
-                            Nav list (TODO BELOW):
-                            <Skeleton variant="rounded" height={100} />
-                        </Grid>
-                    </Grid>
-                </Container>
-            </Stack>
+                        </CardContent>
+                    </Card>
+                </Box>
+            </Box>
         </Container>
     );
 };

@@ -16,12 +16,19 @@ import {
     Box,
     Avatar,
     Paper,
+    Card,
+    CardContent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import tripService from "../../services/trip.ts";
 import "./TripDetails.css";
+import ImageThumb from "../../components/ImageThumb/index.jsx";
+import ExploreIcon from "@mui/icons-material/Explore";
+import MapIcon from "@mui/icons-material/Map";
+import PersonIcon from "@mui/icons-material/Person";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 // JWT parse function
 const parseJwt = (token) => {
@@ -402,133 +409,203 @@ const TripDetails = () => {
     }
 
     return (
-        <Container maxWidth={false} sx={{ mt: 4, fontFamily: "inherit" }}>
-            <Typography
-                color="primary"
-                variant="h4"
-                sx={{
-                    mb: 2,
-                    fontFamily: "inherit",
-                    fontWeight: "bold",
-                    textAlign: "center",
-                    cursor: "default",
-                }}
-            >
-                Trip Details
-            </Typography>
-            
+        <Container maxWidth={false} disableGutters>
             <Box
                 sx={{
-                    mx: "auto",
-                    width: "80%",
                     display: "flex",
                     flexDirection: "column",
-                    gap: 3,
-                    p: 2,
-                    bgcolor: "#f5f5f5",
-                    borderRadius: 2,
-                    boxShadow: 3,
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    pt: 4,
+                    transition: "all 0.5s ease",
                 }}
             >
-                {/* Main Trip Info */}
-                <Box>
-                            {loading ? (
-                                <>
-                            <Skeleton variant="text" height={60} />
-                            <Skeleton variant="text" height={30} width="50%" />
-                            <Skeleton variant="text" height={80} />
-                                </>
-                    ) : trip ? (
-                        <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                                <Typography variant="h4" fontWeight="bold" gutterBottom>
-                                    {trip.name}
-                                </Typography>
-                                <Button 
-                                    variant="contained" 
-                                    color="primary"
-                                    onClick={handleEditMainTrip}
-                                    sx={{ borderRadius: 2 }}
-                                >
-                                    Edit Trip
-                                </Button>
-                            </Box>
-                            <Typography color="text.secondary" gutterBottom>
-                                        Last updated: {new Date(trip.lastUpdatedAt).toLocaleString()}
+                <Typography
+                    color="primary"
+                    variant="h2"
+                    sx={{
+                        mb: 2,
+                        fontFamily: "inherit",
+                        fontWeight: "bold",
+                        fontSize: "48px",
+                        textAlign: "center",
+                    }}
+                >
+                    TRIP DETAILS
+                </Typography>
+                
+                <Box
+                    sx={{
+                        width: "80%",
+                        maxWidth: 800,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 3,
+                        mb: 4,
+                    }}
+                >
+                    {/* Main Trip Info */}
+                    <Box>
+                        {loading ? (
+                            <>
+                                <Skeleton variant="text" height={60} />
+                                <Skeleton variant="text" height={30} width="50%" />
+                                <Skeleton variant="text" height={80} />
+                            </>
+                        ) : trip ? (
+                            <Card 
+                                elevation={3} 
+                                sx={{ 
+                                    p: 0, 
+                                    borderRadius: 2,
+                                    boxShadow: 2,
+                                    transition: "box-shadow 0.2s ease-in-out",
+                                    ":hover": {
+                                        boxShadow: 6,
+                                    },
+                                }}
+                            >
+                                <CardContent sx={{ p: 3 }}>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                                        <Typography 
+                                            variant="h4" 
+                                            sx={{
+                                                fontWeight: "bold",
+                                                color: "#2e7d32",
+                                                mb: 0.5,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: 1,
+                                            }}
+                                        >
+                                            <ImageThumb size="large" shape="circle" /> {trip.name}
+                                        </Typography>
+                                        <Button 
+                                            variant="contained" 
+                                            color="primary"
+                                            onClick={handleEditMainTrip}
+                                            sx={{ borderRadius: 2 }}
+                                        >
+                                            Edit Trip
+                                        </Button>
+                                    </Box>
+                                    <Typography color="text.secondary" gutterBottom>
+                                        <PersonIcon fontSize="small" /> Created: {new Date(trip.createdAt).toLocaleString()}
                                     </Typography>
-                            <Typography variant="body1" sx={{ mt: 2 }}>
-                                {trip.description}
-                            </Typography>
-                            
-                            <Box sx={{ display: 'flex', mt: 2, gap: 1 }}>
-                                <Chip label={`Created by: ${trip.createdBy}`} size="small" color="primary" />
-                                <Chip label={`Created: ${new Date(trip.createdAt).toLocaleDateString()}`} size="small" />
-                            </Box>
-                        </Paper>
-                    ) : (
-                        <Alert severity="warning">No trip data available</Alert>
-                    )}
-                </Box>
+                                    <Typography color="text.secondary" gutterBottom>
+                                        <AccessTimeIcon fontSize="small" /> Updated: {new Date(trip.lastUpdatedAt).toLocaleString()}
+                                    </Typography>
+                                    <Typography 
+                                        variant="body1" 
+                                        color="primary"
+                                        sx={{ 
+                                            mt: 2,
+                                            fontSize: "1rem",
+                                        }}
+                                    >
+                                        {trip.description}
+                                    </Typography>
+                                    
+                                    <Box sx={{ display: 'flex', mt: 2, gap: 1 }}>
+                                        <Chip label={`Created by: ${trip.createdBy}`} size="small" color="primary" />
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            <Alert severity="warning">No trip data available</Alert>
+                        )}
+                    </Box>
 
-                {/* Sub-trips Section */}
-                <Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                        <Typography variant="h5" fontWeight="bold">
-                            Sub-trips
-                        </Typography>
-                        <Button 
-                            variant="contained" 
-                            color="primary"
-                            onClick={handleAdd}
-                            disabled={!trip}
-                            sx={{ borderRadius: 2 }}
-                        >
+                    {/* Sub-trips Section */}
+                    <Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                            <Typography 
+                                variant="h5" 
+                                sx={{
+                                    fontWeight: "bold",
+                                    color: "#1e293b",
+                                }}
+                            >
+                                Sub-trips
+                            </Typography>
+                            <Button 
+                                variant="contained" 
+                                color="primary"
+                                onClick={handleAdd}
+                                disabled={!trip}
+                                sx={{ borderRadius: 2 }}
+                            >
                                 Add New Sub-trip
                             </Button>
-                    </Box>
+                        </Box>
 
                         {loading ? (
                             [1, 2, 3].map((i) => (
-                            <Skeleton key={i} variant="rounded" height={100} sx={{ mb: 2 }} />
+                                <Skeleton key={i} variant="rounded" height={100} sx={{ mb: 2 }} />
                             ))
-                    ) : trip?.smallTrips && trip.smallTrips.length > 0 ? (
-                        <Stack spacing={2}>
-                            {trip.smallTrips.map((subTrip) => (
-                                <Paper
-                                    key={subTrip.id}
-                                    elevation={2}
-                                    sx={{
-                                        p: 2,
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                        borderRadius: 2,
-                                    }}
-                                >
-                                    <Box>
-                                        <Typography variant="h6" fontWeight="bold">
-                                            {subTrip.name}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {subTrip.description}
-                                        </Typography>
-                                    </Box>
-                                    <Button
-                                        variant="contained"
-                                        size="small"
-                                        onClick={() => handleEdit(subTrip)}
-                                        sx={{ borderRadius: 5 }}
+                        ) : trip?.smallTrips && trip.smallTrips.length > 0 ? (
+                            <Stack spacing={2}>
+                                {trip.smallTrips.map((subTrip) => (
+                                    <Card
+                                        key={subTrip.id}
+                                        elevation={2}
+                                        sx={{
+                                            cursor: "pointer",
+                                            p: 0,
+                                            borderRadius: 2,
+                                            boxShadow: 2,
+                                            transition: "box-shadow 0.2s ease-in-out",
+                                            ":hover": {
+                                                boxShadow: 6,
+                                            },
+                                        }}
                                     >
-                                            Edit
-                                        </Button>
-                                </Paper>
-                            ))}
-                        </Stack>
-                    ) : (
-                        <Typography variant="body1" textAlign="center" sx={{ py: 4 }}>
-                            No sub-trips available
+                                        <CardContent sx={{ p: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                            <Box>
+                                                <Typography 
+                                                    variant="h6" 
+                                                    sx={{
+                                                        fontWeight: "bold",
+                                                        color: "#2e7d32",
+                                                        mb: 0.5,
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: 1,
+                                                    }}
+                                                >
+                                                    <ImageThumb size="small" shape="rounded" /> {subTrip.name}
+                                                </Typography>
+                                                <Typography 
+                                                    variant="body2" 
+                                                    color="primary"
+                                                    sx={{
+                                                        fontSize: "1rem",
+                                                        maxWidth: "100%",
+                                                        overflow: "hidden",
+                                                        textOverflow: "ellipsis",
+                                                    }}
+                                                >
+                                                    {subTrip.description}
+                                                </Typography>
+                                            </Box>
+                                            <Button
+                                                variant="contained"
+                                                size="small"
+                                                onClick={() => handleEdit(subTrip)}
+                                                sx={{ borderRadius: 5 }}
+                                            >
+                                                Edit
+                                            </Button>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </Stack>
+                        ) : (
+                            <Typography variant="body1" textAlign="center" sx={{ py: 4 }}>
+                                No sub-trips available
                             </Typography>
-                    )}
+                        )}
+                    </Box>
                 </Box>
             </Box>
 
